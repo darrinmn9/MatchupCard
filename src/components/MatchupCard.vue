@@ -1,5 +1,10 @@
 <script>
+import MatchupCardBody from '@/components/MatchupCardBody.vue'
+
 export default {
+  components: {
+    MatchupCardBody
+  },
   props: {
     matchups: {
       type: Array,
@@ -20,33 +25,18 @@ export default {
     },
     currentMatchup() {
       return this.matchups[this.currentMatchupIndex]
-    },
-    matchupDateTimeDisplay() {
-      return `${this.currentMatchup.schedule.day.slice(0, 3)} ${this.currentMatchup.schedule.time}`
-    },
-    homeTeam() {
-      return this.currentMatchup.teams.find((team) => team.home)
-    },
-    awayTeam() {
-      return this.currentMatchup.teams.find((team) => !team.home)
     }
   },
   methods: {
-    goToPrevious() {
+    goToPreviousMatchup() {
       if (this.canGoPrevious) {
         this.currentMatchupIndex--
       }
     },
-    goToNext() {
+    goToNextMatchup() {
       if (this.canGoNext) {
         this.currentMatchupIndex++
       }
-    },
-    teamRecordDisplay(team) {
-      return `${team.wins}-${team.losses}-${team.ties}`
-    },
-    decimalToPercentDisplay(decimal) {
-      return `${decimal.toFixed(2) * 100}%`
     }
   }
 }
@@ -71,7 +61,7 @@ export default {
           type="button"
           aria-label="Go to previous matchup"
           :disabled="!canGoPrevious"
-          @click="goToPrevious"
+          @click="goToPreviousMatchup"
         >
           ‹
         </button>
@@ -80,32 +70,13 @@ export default {
           type="button"
           aria-label="Go to next matchup"
           :disabled="!canGoNext"
-          @click="goToNext"
+          @click="goToNextMatchup"
         >
           ›
         </button>
       </div>
     </header>
-    <div class="card-body">
-      <div class="teams-container">
-        <div>
-          <h4 class="team-text">{{ awayTeam.abbrev.toUpperCase() }}</h4>
-          <div>{{ teamRecordDisplay(awayTeam) }}</div>
-        </div>
-        <div class="divider-text-center">at</div>
-        <div>
-          <h4 class="team-text">{{ homeTeam.abbrev.toUpperCase() }}</h4>
-          <div>{{ teamRecordDisplay(homeTeam) }}</div>
-        </div>
-      </div>
-      <div class="flex-center matchup-date">{{ matchupDateTimeDisplay }}</div>
-      <hr class="matchup-divider" />
-      <div class="expert-consensus">
-        <div>{{ decimalToPercentDisplay(currentMatchup.analysis.awayPct) }}</div>
-        <div class="divider-text-center">Expert Consensus</div>
-        <div>{{ decimalToPercentDisplay(currentMatchup.analysis.homePct) }}</div>
-      </div>
-    </div>
+    <MatchupCardBody class="card-body" :matchup="currentMatchup"></MatchupCardBody>
     <footer class="flex-center card-footer">
       <a href="https://www.fantasypros.com" target="_blank" style="text-decoration: none"
         >View Matchup</a
@@ -158,39 +129,6 @@ export default {
 
 .card-body {
   margin: 24px 32px;
-  text-align: center;
-}
-
-.teams-container {
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.matchup-date {
-  margin: 16px 0;
-}
-
-.team-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-  line-height: 24px;
-}
-
-.divider-text-center {
-  width: 100px;
-  text-wrap: wrap;
-}
-
-.matchup-divider {
-  margin: 24px 16px;
-  border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.expert-consensus {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
 }
 
 .card-footer {
