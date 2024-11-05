@@ -40,8 +40,15 @@ export default {
 
 <template>
   <div class="main-container">
-    <MatchupCard :matchups="matchups" />
+    <MatchupCard :matchups="matchups" style="width: 400px" />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.main-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
